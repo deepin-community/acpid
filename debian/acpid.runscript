@@ -1,0 +1,5 @@
+#!/usr/bin/env /lib/runit/invoke-run
+exec 2>&1
+exec /usr/bin/env -i /usr/sbin/acpid --foreground ${OPTIONS:-}
+
+# vim: ft=sh

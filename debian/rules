@@ -1,0 +1,25 @@
+#!/usr/bin/make -f
+
+export DEB_BUILD_MAINT_OPTIONS=hardening=+all
+
+export DEB_CFLAGS_MAINT_PREPEND = -W -Wall -Werror -Wundef -Wshadow -D_GNU_SOURCE
+export DEB_CFLAGS_MAINT_APPEND = -fno-strict-aliasing
+
+%:
+	dh ${@} --with runit
+
+# acpid.service will still be started by dh_installinit on installation, but
+# the systemd service is socket-activated, thus does not have to be started
+override_dh_installsystemd:
+	dh_installsystemd -pacpid --no-enable --no-start acpid.service
+	dh_installsystemd -pacpid acpid.socket
+	dh_installsystemd -pacpid acpid.path
+	dh_installsystemd --remaining-packages
+
+override_dh_missing:
+	dh_missing --exclude usr/bin/acpi_listen --exclude usr/sbin/acpid \
+	 --exclude usr/sbin/kacpimon --exclude usr/share/doc/acpid/COPYING \
+	 --exclude usr/share/doc/acpid/Changelog --exclude usr/share/doc/acpid/README \
+	 --exclude usr/share/doc/acpid/TESTPLAN --exclude usr/share/doc/acpid/TODO \
+	 --exclude usr/share/man/man8/acpid.8 --exclude usr/share/man/man8/kacpimon.8 \
+     --exclude usr/share/man/man8/acpi_listen.8

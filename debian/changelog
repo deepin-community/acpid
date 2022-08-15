@@ -1,0 +1,5 @@
+acpid (1:2.0.33-deepin) stable; urgency=medium
+
+  * ['Rebuild  against by  current gcc 11.2']
+
+ -- Deepin Packages Builder <packages@deepin.org>  Wed, 10 Aug 2022 21:05:35 +0800

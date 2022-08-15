@@ -1,0 +1,2 @@
+version=4
+http://sf.net/acpid2/acpid-(\d\S+)\.(?:zip|tgz|tbz|txz|(?:tar\.(?:gz|bz2|xz)))

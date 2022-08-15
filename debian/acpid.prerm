@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -e
+
+# Stop the socket on remove and upgrade so acpid is not restarted via socket
+# activation
+if [ -d /run/systemd/system ] && [ "$1" = remove -o "$1" = upgrade ] ; then
+        systemctl stop acpid.socket || true
+fi
+
+#DEBHELPER#

@@ -1,0 +1,1 @@
+debian/acpid.runscript logscript,name=acpid,since=1:2.0.31-1.1
