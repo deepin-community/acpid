@@ -1,5 +1,6 @@
 [Unit]
 Description=ACPID Listen Socket
+ConditionVirtualization=!container
 
 [Socket]
 ListenStream=/run/acpid.socket

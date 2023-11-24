@@ -1,0 +1,17 @@
+Description: When passing -Werror=sign-compare at compile time. An error is
+ returned when comparing ‘int’ and ‘long unsigned int’ in the input_layer.c
+ file. This patch add a int casting to the value returned by the DIM macro.
+Author: Josue Ortega <josue@debian.org>
+Last-Update: 2023-11-12
+
+--- a/input_layer.c
++++ b/input_layer.c
+@@ -253,7 +253,7 @@
+ 
+ 	acpid_log(LOG_DEBUG, "Dumping event table...");
+ 
+-	for (i = 0; i < DIM(evtab); ++i)
++	for (i = 0; i < (int) DIM(evtab); ++i)
+ 	{
+ 		acpid_log(LOG_DEBUG,
+ 			"  Event Table:  Type: %u  Code: %u  Value: %d  Str: %s",

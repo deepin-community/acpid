@@ -7,7 +7,7 @@
  *  Inspired by (and in some cases blatantly lifted from) Vojtech Pavlik's
  *  evtest.c.
  *
- *  Copyright (C) 2008-2009, Ted Felix (www.tedfelix.com)
+ *  Copyright (C) 2008-2022, Ted Felix (www.tedfelix.com)
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- *  (tabs at 4)
+ *  (tabs at 4, tabs not spaces)
  */
 
 /* system */
@@ -49,7 +49,9 @@
 #define DIM(a)  (sizeof(a) / sizeof(a[0]))
 
 struct evtab_entry {
-	struct input_event event;
+	unsigned type;
+	unsigned code;
+	int value;
 	const char *str;
 };
 
@@ -69,69 +71,62 @@ static struct evtab_entry evtab[] = {
 
 	/*** COMMON EVENTS ***/
 
-	{{{0,0}, EV_KEY, KEY_POWER, 1}, "button/power PBTN 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_SUSPEND, 1}, 
- 		"button/suspend SUSP 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_SLEEP, 1}, "button/sleep SBTN 00000080 00000000"},
-	{{{0,0}, EV_SW, SW_LID, 1}, "button/lid LID close"},
-	{{{0,0}, EV_SW, SW_LID, 0}, "button/lid LID open"},
-	{{{0,0}, EV_SW, SW_TABLET_MODE, 0}, "video/tabletmode TBLT 0000008A 00000000"},
-	{{{0,0}, EV_SW, SW_TABLET_MODE, 1}, "video/tabletmode TBLT 0000008A 00000001"},
+	{ EV_KEY, KEY_POWER, 1, "button/power PBTN 00000080 00000000" },
+	{ EV_KEY, KEY_SUSPEND, 1, "button/suspend SUSP 00000080 00000000" },
+	{ EV_KEY, KEY_SLEEP, 1, "button/sleep SBTN 00000080 00000000" },
+	{ EV_SW, SW_LID, 1, "button/lid LID close"},
+	{ EV_SW, SW_LID, 0, "button/lid LID open"},
+	{ EV_SW, SW_TABLET_MODE, 0, "video/tabletmode TBLT 0000008A 00000000" },
+	{ EV_SW, SW_TABLET_MODE, 1, "video/tabletmode TBLT 0000008A 00000001" },
 
 
 	/*** VIDEO ***/
 
-	{{{0,0}, EV_KEY, KEY_ZOOM, 1}, "button/zoom ZOOM 00000080 00000000"},
+	{ EV_KEY, KEY_ZOOM, 1, "button/zoom ZOOM 00000080 00000000" },
 	/* typical events file has "video.* 00000087" */
-	{{{0,0}, EV_KEY, KEY_BRIGHTNESSDOWN, 1},
- 		"video/brightnessdown BRTDN 00000087 00000000"},
+	{ EV_KEY, KEY_BRIGHTNESSDOWN, 1,
+			"video/brightnessdown BRTDN 00000087 00000000" },
  	/* typical events file has "video.* 00000086" */
-	{{{0,0}, EV_KEY, KEY_BRIGHTNESSUP, 1},
- 		"video/brightnessup BRTUP 00000086 00000000"},
+	{ EV_KEY, KEY_BRIGHTNESSUP, 1,
+			"video/brightnessup BRTUP 00000086 00000000"},
  	/* additional events divined from the kernel's video.c */
-	{{{0,0}, EV_KEY, KEY_VIDEO_NEXT, 1},
- 		"video/next NEXT 00000083 00000000"},
-	{{{0,0}, EV_KEY, KEY_VIDEO_PREV, 1},
- 		"video/prev PREV 00000084 00000000"},
-	{{{0,0}, EV_KEY, KEY_BRIGHTNESS_CYCLE, 1},
- 		"video/brightnesscycle BCYC 00000085 00000000"},
-	{{{0,0}, EV_KEY, KEY_BRIGHTNESS_ZERO, 1},
- 		"video/brightnesszero BZRO 00000088 00000000"},
-	{{{0,0}, EV_KEY, KEY_DISPLAY_OFF, 1},
-			"video/displayoff DOFF 00000089 00000000"},
+	{ EV_KEY, KEY_VIDEO_NEXT, 1, "video/next NEXT 00000083 00000000" },
+	{ EV_KEY, KEY_VIDEO_PREV, 1, "video/prev PREV 00000084 00000000" },
+	{ EV_KEY, KEY_BRIGHTNESS_CYCLE, 1,
+			"video/brightnesscycle BCYC 00000085 00000000"},
+	{ EV_KEY, KEY_BRIGHTNESS_ZERO, 1,
+			"video/brightnesszero BZRO 00000088 00000000"},
+	{ EV_KEY, KEY_DISPLAY_OFF, 1,
+			"video/displayoff DOFF 00000089 00000000" },
 	/* procfs on Thinkpad 600X reports "video VID0 00000080 00000000" */
 	/* typical events file has "video.* 00000080" */
-	{{{0,0}, EV_KEY, KEY_SWITCHVIDEOMODE, 1},
-		"video/switchmode VMOD 00000080 00000000"},
+	{ EV_KEY, KEY_SWITCHVIDEOMODE, 1,
+			"video/switchmode VMOD 00000080 00000000"},
 
 
  	/*** AUDIO ***/
 
- 	{{{0,0}, EV_KEY, KEY_VOLUMEDOWN, 1},
- 		"button/volumedown VOLDN 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_VOLUMEDOWN, 2},
-		"button/volumedown VOLDN 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_VOLUMEUP, 1},
-		"button/volumeup VOLUP 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_VOLUMEUP, 2},
- 		"button/volumeup VOLUP 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_MUTE, 1},
- 		"button/mute MUTE 00000080 00000000"},
+	{ EV_KEY, KEY_VOLUMEDOWN, 1, "button/volumedown VOLDN 00000080 00000000" },
+	{ EV_KEY, KEY_VOLUMEDOWN, 2, "button/volumedown VOLDN 00000080 00000000" },
+	{ EV_KEY, KEY_VOLUMEUP, 1, "button/volumeup VOLUP 00000080 00000000" },
+	{ EV_KEY, KEY_VOLUMEUP, 2, "button/volumeup VOLUP 00000080 00000000" },
+	{ EV_KEY, KEY_MUTE, 1, "button/mute MUTE 00000080 00000000" },
 /* Kernel 3.1 or later required for KEY_MICMUTE */
 #ifdef KEY_MICMUTE
-	{{{0,0}, EV_KEY, KEY_MICMUTE, 1},
-		"button/micmute MICMUTE 00000080 00000000"},
+	{ EV_KEY, KEY_MICMUTE, 1, "button/micmute MICMUTE 00000080 00000000" },
 #endif
  	/* cd play/pause buttons */
- 	{{{0,0}, EV_KEY, KEY_NEXTSONG, 1},
- 		"cd/next CDNEXT 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_PREVIOUSSONG, 1},
- 		"cd/prev CDPREV 00000080 00000000"},
- 	{{{0,0}, EV_KEY, KEY_PLAYPAUSE, 1},
- 		"cd/play CDPLAY 00000080 00000000"},
- 	{{{0,0}, EV_KEY, KEY_STOPCD, 1},
- 		"cd/stop CDSTOP 00000080 00000000"},
-
+	{ EV_KEY, KEY_NEXTSONG, 1, "cd/next CDNEXT 00000080 00000000" },
+	{ EV_KEY, KEY_PREVIOUSSONG, 1, "cd/prev CDPREV 00000080 00000000" },
+	{ EV_KEY, KEY_PLAYPAUSE, 1, "cd/play CDPLAY 00000080 00000000" },
+	{ EV_KEY, KEY_PLAYCD, 1, "cd/play2 CDPLAY2 00000080 00000000" },
+	{ EV_KEY, KEY_PAUSECD, 1, "cd/pause CDPAUSE 00000080 00000000" },
+	{ EV_KEY, KEY_STOPCD, 1, "cd/stop CDSTOP 00000080 00000000" },
+	{ EV_KEY, KEY_EJECTCD, 1, "cd/eject CDEJECT 00000080 00000000" },
+	{ EV_KEY, KEY_EJECTCLOSECD, 1,
+			"cd/ejectclose CDEJECTCLOSE 00000080 00000000" },
+	{ EV_KEY, KEY_FASTFORWARD, 1, "button/ff FF 00000080 00000000" },
+	{ EV_KEY, KEY_REWIND, 1, "button/rew REW 00000080 00000000" },
 
 	/*** JACKS ***/
 
@@ -140,28 +135,18 @@ static struct evtab_entry evtab[] = {
  #ifndef SW_LINEIN_INSERT
   #define SW_LINEIN_INSERT 0x0d
  #endif
-	{{{0,0}, EV_SW, SW_HEADPHONE_INSERT, 0},
-		"jack/headphone HEADPHONE unplug"},
-	{{{0,0}, EV_SW, SW_HEADPHONE_INSERT, 1},
-		"jack/headphone HEADPHONE plug"},
-	{{{0,0}, EV_SW, SW_MICROPHONE_INSERT, 0},
-		"jack/microphone MICROPHONE unplug"},
-	{{{0,0}, EV_SW, SW_MICROPHONE_INSERT, 1},
-		"jack/microphone MICROPHONE plug"},
-	{{{0,0}, EV_SW, SW_LINEOUT_INSERT, 0},
-		"jack/lineout LINEOUT unplug"},
-	{{{0,0}, EV_SW, SW_LINEOUT_INSERT, 1},
-		"jack/lineout LINEOUT plug"},
+	{ EV_SW, SW_HEADPHONE_INSERT, 0, "jack/headphone HEADPHONE unplug" },
+	{ EV_SW, SW_HEADPHONE_INSERT, 1, "jack/headphone HEADPHONE plug" },
+	{ EV_SW, SW_MICROPHONE_INSERT, 0, "jack/microphone MICROPHONE unplug" },
+	{ EV_SW, SW_MICROPHONE_INSERT, 1, "jack/microphone MICROPHONE plug" },
+	{ EV_SW, SW_LINEOUT_INSERT, 0, "jack/lineout LINEOUT unplug" },
+	{ EV_SW, SW_LINEOUT_INSERT, 1, "jack/lineout LINEOUT plug" },
 #ifdef SW_VIDEOOUT_INSERT
-	{{{0,0}, EV_SW, SW_VIDEOOUT_INSERT, 0},
-		"jack/videoout VIDEOOUT unplug"},
-	{{{0,0}, EV_SW, SW_VIDEOOUT_INSERT, 1},
-		"jack/videoout VIDEOOUT plug"},
+	{ EV_SW, SW_VIDEOOUT_INSERT, 0, "jack/videoout VIDEOOUT unplug" },
+	{ EV_SW, SW_VIDEOOUT_INSERT, 1, "jack/videoout VIDEOOUT plug" },
 #endif
-	{{{0,0}, EV_SW, SW_LINEIN_INSERT, 0},
-		"jack/linein LINEIN unplug"},
-	{{{0,0}, EV_SW, SW_LINEIN_INSERT, 1},
-		"jack/linein LINEIN plug"},
+	{ EV_SW, SW_LINEIN_INSERT, 0, "jack/linein LINEIN unplug" },
+	{ EV_SW, SW_LINEIN_INSERT, 1, "jack/linein LINEIN plug" },
 #else
  #warning SW_HEADPHONE_INSERT not found in input_layer.h. Support for plug/unplug events will be disabled. Please upgrade your kernel headers to Linux-3.2 or newer.
 #endif
@@ -170,33 +155,40 @@ static struct evtab_entry evtab[] = {
  	/*** MISCELLANEOUS ***/
 
 	/* blue access IBM button on Thinkpad T42p*/
-	{{{0,0}, EV_KEY, KEY_PROG1, 1}, "button/prog1 PROG1 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_VENDOR, 1}, "button/vendor VNDR 00000080 00000000"},
+	{ EV_KEY, KEY_PROG1, 1, "button/prog1 PROG1 00000080 00000000" },
+	{ EV_KEY, KEY_VENDOR, 1, "button/vendor VNDR 00000080 00000000" },
 	/* Fn-F2 produces KEY_BATTERY on Thinkpad T42p */
-	{{{0,0}, EV_KEY, KEY_BATTERY, 1},
- 		"button/battery BAT 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_SCREENLOCK, 1},
- 		"button/screenlock SCRNLCK 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_COFFEE, 1}, "button/coffee CFEE 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_WLAN, 1}, "button/wlan WLAN 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_FN_F1, 1}, "button/fnf1 FNF1 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_FN_F2, 1}, "button/fnf2 FNF2 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_FN_F6, 1}, "button/fnf6 FNF6 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_FN_F9, 1}, "button/fnf9 FNF9 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_FN_F10, 1}, "button/fnf10 FF10 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_FN_F11, 1}, "button/fnf11 FF11 00000080 00000000"},
+	{ EV_KEY, KEY_BATTERY, 1, "button/battery BAT 00000080 00000000" },
+	{ EV_KEY, KEY_SCREENLOCK, 1,
+			"button/screenlock SCRNLCK 00000080 00000000" },
+	{ EV_KEY, KEY_COFFEE, 1, "button/coffee CFEE 00000080 00000000" },
+	{ EV_KEY, KEY_WLAN, 1, "button/wlan WLAN 00000080 00000000" },
+	{ EV_KEY, KEY_FN_F1, 1, "button/fnf1 FNF1 00000080 00000000" },
+	{ EV_KEY, KEY_FN_F2, 1, "button/fnf2 FNF2 00000080 00000000" },
+	{ EV_KEY, KEY_FN_F6, 1, "button/fnf6 FNF6 00000080 00000000" },
+	{ EV_KEY, KEY_FN_F9, 1, "button/fnf9 FNF9 00000080 00000000" },
+	{ EV_KEY, KEY_FN_F10, 1, "button/fnf10 FF10 00000080 00000000" },
+	{ EV_KEY, KEY_FN_F11, 1, "button/fnf11 FF11 00000080 00000000" },
 	/* F20 is sometimes used for micmute */
-	{{{0,0}, EV_KEY, KEY_F20, 1}, "button/f20 F20 00000080 00000000"},
+	{ EV_KEY, KEY_F20, 1, "button/f20 F20 00000080 00000000" },
 	/* Fn-F9 produces KEY_F24 on Thinkpad T42p */
-	{{{0,0}, EV_KEY, KEY_F24, 1}, "button/f24 F24 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_KBDILLUMTOGGLE, 1},
- 		"button/kbdillumtoggle KBILLUM 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_KBDILLUMUP, 1},
-		"button/kbdillumup KBILLUMUP 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_KBDILLUMDOWN, 1},
-		"button/kbdillumdown KBILLUMDOWN 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_COPY, 1}, "button/copy COPY 00000080 00000000"},
-	{{{0,0}, EV_KEY, KEY_RESTART, 1}, "button/restart RSTR 00000080 00000000"},
+	{ EV_KEY, KEY_F24, 1, "button/f24 F24 00000080 00000000" },
+	{ EV_KEY, KEY_KBDILLUMTOGGLE, 1,
+			"button/kbdillumtoggle KBILLUM 00000080 00000000" },
+	{ EV_KEY, KEY_KBDILLUMUP, 1,
+			"button/kbdillumup KBILLUMUP 00000080 00000000" },
+	{ EV_KEY, KEY_KBDILLUMDOWN, 1,
+			"button/kbdillumdown KBILLUMDOWN 00000080 00000000" },
+	{ EV_KEY, KEY_COPY, 1, "button/copy COPY 00000080 00000000" },
+	{ EV_KEY, KEY_RESTART, 1, "button/restart RSTR 00000080 00000000" },
+	{ EV_KEY, KEY_KPENTER, 1, "button/kpenter KPENTER 00000080 00000000" },
+	{ EV_KEY, KEY_UP, 1, "button/up UP 00000080 00000000" },
+	{ EV_KEY, KEY_LEFT, 1, "button/left LEFT 00000080 00000000" },
+	{ EV_KEY, KEY_RIGHT, 1, "button/right RIGHT 00000080 00000000" },
+	{ EV_KEY, KEY_DOWN, 1, "button/down DOWN 00000080 00000000" },
+	{ EV_KEY, KEY_MENU, 1, "button/menu MENU 00000080 00000000" },
+	{ EV_KEY, KEY_BACK, 1, "button/back BACK 00000080 00000000" },
+	{ EV_KEY, KEY_HOMEPAGE, 1, "button/homepage HOMEPAGE 00000080 00000000" },
 
 #if 0
 	/* These "EV_MSC, 4, x" events cause trouble.  They are triggered */
@@ -205,20 +197,74 @@ static struct evtab_entry evtab[] = {
  	/* Apparently there is no KEY_FN_BS, etc..., defined in input.h. */
 
 	/* EV_MSC, MSC_SCAN, KEY_MINUS  This is triggered by the minus key. */
-	{{{0,0}, EV_MSC, 4, 12}, "button/fnbs FNBS 00000080 00000000"},
+	{ EV_MSC, 4, 12, "button/fnbs FNBS 00000080 00000000" },
 
 	/* EV_MSC, MSC_SCAN, KEY_EQUAL  Triggered by the equals key. */
-	{{{0,0}, EV_MSC, 4, 13}, "button/fnins FNINS 00000080 00000000"},
+	{ EV_MSC, 4, 13, "button/fnins FNINS 00000080 00000000" },
 
 	/* EV_MSC, MSC_SCAN, KEY_BACKSPACE   Triggered by the backspace key. */
-	{{{0,0}, EV_MSC, 4, 14}, "button/fndel FNDEL 00000080 00000000"},
+	{ EV_MSC, 4, 14, "button/fndel FNDEL 00000080 00000000" },
 
 	/* EV_MSC, MSC_SCAN, KEY_E   Triggered by the 'E' key. */
-	{{{0,0}, EV_MSC, 4, 18}, "button/fnpgdown FNPGDOWN 00000080 00000000"},
+	{ EV_MSC, 4, 18, "button/fnpgdown FNPGDOWN 00000080 00000000" },
 #endif
 
 };
 
+/*-----------------------------------------------------------------*/
+/* Compare all three key fields. */
+static int event_compare_3(const void *lhs, const void *rhs)
+{
+	const struct evtab_entry *levent = lhs;
+	const struct evtab_entry *revent = rhs;
+	int diff = 0;
+
+	diff = levent->type - revent->type;
+	if (diff != 0)
+		return diff;
+
+	diff = levent->code - revent->code;
+	if (diff != 0)
+		return diff;
+
+	return levent->value - revent->value;
+}
+
+/*-----------------------------------------------------------------*/
+/* Just compare type and code.  For need_event(). */
+static int event_compare_2(const void *lhs, const void *rhs)
+{
+	const struct evtab_entry *levent = lhs;
+	const struct evtab_entry *revent = rhs;
+	int diff = 0;
+
+	diff = levent->type - revent->type;
+	if (diff != 0)
+		return diff;
+
+	return levent->code - revent->code;
+}
+
+/*----------------------------------------------------------------------*/
+
+static void dump_events(void)
+{
+	int i;
+
+	acpid_log(LOG_DEBUG, "Dumping event table...");
+
+	for (i = 0; i < DIM(evtab); ++i)
+	{
+		acpid_log(LOG_DEBUG,
+			"  Event Table:  Type: %u  Code: %u  Value: %d  Str: %s",
+			evtab[i].type,
+			evtab[i].code,
+			evtab[i].value,
+			evtab[i].str);
+	}
+}
+
+/*----------------------------------------------------------------------*/
 /* special support for the MUTE key, as the key toggles we want to
  * consider repeated keys but don't report them all the time. We just
  * ensure that the number of key presses (MOD 2) is correct.
@@ -249,23 +295,25 @@ mute_string(struct input_event event)
 static const char *
 event_string(struct input_event event)
 {
-	unsigned i;
-	
-	/* for each entry in the event table */
-	/* ??? Is there a faster way?  This is triggered every time the user
-	 *     presses a key.  Maybe a simple hash algorithm?  Or a simple check
-	 *     for very common keys (alphanumeric) and bail before this?  */
-	for (i = 0; i < DIM(evtab); ++i)
-	{
-		/* if this is a matching event, return its string */
-		if (event.type == evtab[i].event.type  &&
-			event.code == evtab[i].event.code  &&
-			event.value == evtab[i].event.value) {
-			return evtab[i].str;
-		}
-	}
-	
-	return NULL;
+	struct evtab_entry search_event;
+	struct evtab_entry *found_event;
+
+	search_event.type = event.type;
+	search_event.code = event.code;
+	search_event.value = event.value;
+
+	/* Use binary search since the table is getting fairly large. */
+	found_event = bsearch(
+		&search_event,
+		evtab,
+		DIM(evtab),
+		sizeof(struct evtab_entry),
+		event_compare_3);
+
+	if (!found_event)
+		return NULL;
+
+	return found_event->str;
 }
 
 /*-----------------------------------------------------------------*/
@@ -273,18 +321,24 @@ event_string(struct input_event event)
 static int 
 need_event(int type, int code)
 {
-	unsigned i;
+	struct evtab_entry search_event;
+	struct evtab_entry *found_event;
 
-	/* for each entry in the event table */
-	for (i = 0; i < DIM(evtab); ++i) {
-		/* if we found a matching event */
-		if (type == evtab[i].event.type  &&
-			code == evtab[i].event.code) {
-			return 1;
-		}
-	}
+	search_event.type = type;
+	search_event.code = code;
 
-	return 0;
+	/* Use binary search since the table is getting fairly large. */
+	found_event = bsearch(
+		&search_event,
+		evtab,
+		DIM(evtab),
+		sizeof(struct evtab_entry),
+		event_compare_2);
+
+	if (!found_event)
+		return 0;
+
+	return 1;
 }
 
 /*-----------------------------------------------------------------*/
@@ -330,6 +384,18 @@ static void process_input(int fd)
 		acpid_log(LOG_WARNING, "input layer unexpected length: "
 			"%zd   expected: %zd", nbytes, sizeof(event));
 		return;
+	}
+
+	if (debug_level >= 2) {
+		/* Logging in the style of kacpimon. */
+		if (event.type == EV_SYN) {
+			acpid_log(LOG_DEBUG, "Input Layer:  Sync");
+		} else {
+			/* format and display the event struct in decimal */
+			acpid_log(LOG_DEBUG, "Input Layer:  "
+				"Type: %hu  Code: %hu  Value: %d",
+				event.type, event.code, event.value);
+		}
 	}
 
 	c = find_connection(fd);
@@ -382,22 +448,38 @@ static void process_input(int fd)
 }
 
 #define BITS_PER_LONG (sizeof(long) * 8)
+/* longs needed for x bits.  More of a BITS_TO_LONGS(bits). */
 #define NBITS(x) ((((x)-1)/BITS_PER_LONG)+1)
 #define OFF(x)  ((x)%BITS_PER_LONG)
 #define LONG(x) ((x)/BITS_PER_LONG)
 #define test_bit(bit, array)	((array[LONG(bit)] >> OFF(bit)) & 1)
 
-/*--------------------------------------------------------------------*/
-/* returns non-zero if the file descriptor supports one of the events */
-/* supported by event_string().  */
+/*--------------------------------------------------------------------
+ * Returns non-zero if the file descriptor supports one of the events
+ * supported by event_string().
+ *
+ * ??? Performance: This uses a lot of CPU.  Why not generate an event
+ *     bitmap from evtab, then compare the two using AND (&) long by
+ *     long and return 1 if any are non-zero?  That should reduce CPU
+ *     usage to 1/32 or possibly MUCH less.  This would also get rid
+ *     of need_event() and event_compare_2().
+ */
 static int 
 has_event(int fd)
 {
 	int type, code;
+	/*
+	 * Event bitmap.  Use test_bit(code, bit[type]) to read.
+	 * Need a set_bit() to write.
+	 * ??? Memory: We could save memory here by having only two rows.
+	 *     One for the type bitmap and one for the code bitmap we are
+	 *     currently checking.
+	 */
 	unsigned long bit[EV_MAX][NBITS(KEY_MAX)];
 
 	memset(bit, 0, sizeof(bit));
-	/* get the event type bitmap */
+	/* Get the event bitmap for type == 0 (EV_SYN). */
+	/* This is a special row that indicates which types are supported. */
 	ioctl(fd, EVIOCGBIT(0, sizeof(bit[0])), bit[0]);
 
 	/* for each event type */
@@ -406,7 +488,7 @@ has_event(int fd)
 		if (test_bit(type, bit[0])) {
 			/* skip sync */
 			if (type == EV_SYN) continue;
-			/* get the event code mask */
+			/* get the event bitmap for this type */
 			ioctl(fd, EVIOCGBIT(type, sizeof(bit[type])), bit[type]);
 			/* for each event code */
 			for (code = 0; code < KEY_MAX; code++) {
@@ -482,6 +564,13 @@ void open_input(void)
 	glob_t globbuf;
 	unsigned i;
 	int success = 0;
+
+	/* Sort the event table. */
+	qsort(evtab, DIM(evtab), sizeof(struct evtab_entry),
+          event_compare_3);
+
+	if (debug_level >= 3)
+		dump_events();
 
 	/* get all the matching event filenames */
 	glob(ACPID_INPUTLAYERFILES, 0, NULL, &globbuf);
