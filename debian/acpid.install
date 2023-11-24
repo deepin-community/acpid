@@ -6,4 +6,3 @@ debian/examples/ac		usr/share/doc/acpid/examples/
 debian/examples/ac.sh		usr/share/doc/acpid/examples/
 acpi_listen			usr/bin
 acpid				usr/sbin
-debian/acpid.path		lib/systemd/system/

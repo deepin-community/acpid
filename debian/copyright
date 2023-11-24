@@ -12,7 +12,7 @@ Files: debian/*
 Copyright: 2000 Wichert Akkerman <wakkerma@debian.org>
            2001 Cajus Pollmeier <cajus@debian.org>
            2008-2019 Michael Meskes <meskes@debian.org>
-		   2019 Josue Ortega <josue@debian.org>
+           2023 Josue Ortega <josue@debian.org>
 License: GPL-2
 
 License: GPL-2
