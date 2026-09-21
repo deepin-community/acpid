@@ -1,3 +1,9 @@
+acpid (1:2.0.34-1deepin1) unstable; urgency=medium
+
+  * Rebuild with LTO enabled (dpkg vendor feature optimize/lto).
+
+ -- tunaichao <tunaichao@uniontech.com>  Mon, 21 Sep 2026 14:33:48 +0800
+
 acpid (1:2.0.34-1) unstable; urgency=medium
 
   * New upstream release (2.0.34). Closes: #1055282:
